@@ -1,17 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
 const routes = require('./routes/route');
 
 // Create Express app
 const app = express();
 
-// Set up body-parser middleware to parse request bodies
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+require("dotenv").config();
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost/taskmanagerdb', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to MongoDB');
   })
