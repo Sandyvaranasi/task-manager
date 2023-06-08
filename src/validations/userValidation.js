@@ -1,4 +1,5 @@
 const joi = require("joi");
+const userModel = require('../models/userModel')
 
 const createValidationSchema = joi.object({
     username: joi.string().required(),
@@ -15,7 +16,6 @@ const createValidationSchema = joi.object({
       ),
     role: joi
     .string()
-    .default('user')
     .valid('admin','user')  
   });
 
@@ -52,5 +52,14 @@ const createValidationSchema = joi.object({
     .valid('admin','user')  
   });
 
+  const duplicateKey =  (data)=>{
+    const user =  userModel.findOne({$or : [data],isDeleted:false});
+    console.log(user._doc);
+    if(user._doc){
+      if(user.email==data.email) return 'email is already in use.'
+      else if(user.username==data.username) return 'username is already in use.'
+    }
+  }
 
-  module.exports = {createValidationSchema, loginValidationSchema, updateValidationSchema}
+
+  module.exports = {createValidationSchema, loginValidationSchema, updateValidationSchema, duplicateKey}
